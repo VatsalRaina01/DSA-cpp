@@ -1,7 +1,7 @@
 class Solution {
 public:
     int maxFreeTime(int eventTime, int k, vector<int>& startTime, vector<int>& endTime) {
-        vector<int> fs;
+        vector<int> fs(startTime.size()+1);
         fs.push_back(startTime[0]);
         for(int i=1;i<startTime.size();i++){
             fs.push_back(startTime[i]-endTime[i-1]);
