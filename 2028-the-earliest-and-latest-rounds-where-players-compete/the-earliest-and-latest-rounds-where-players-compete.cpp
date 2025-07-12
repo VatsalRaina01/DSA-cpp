@@ -1,54 +1,61 @@
 class Solution {
+private:
+    int F[30][30][30], G[30][30][30];
+
 public:
-    int mn = 10000;
-    int mx = 0;
-    int first;
-    int second;
-    void dfs(vector<int> &arr, int round) {
-        int size = arr.size() / 2;
-        if(arr.size() == 1) return;
-        for(int i = 0; i < size; i++) {
-            //if we can match first and second in this round.
-            if(arr[i] == first && arr[arr.size() - i - 1] == second) {
-                mn = min(mn, round);
-                mx = max(mx, round);
-                return;
-            }
+    pair<int, int> dp(int n, int f, int s) {
+        if (F[n][f][s]) {
+            return {F[n][f][s], G[n][f][s]};
         }
-        bool f1 = false, f2 = false;
-        for(auto n : arr) {
-            f1 |= n == first;
-            f2 |= n == second;
+        if (f + s == n + 1) {
+            return {1, 1};
         }
-        if(!f1 || !f2) { //can not find first and second player.
-            return;
+
+        // F(n,f,s)=F(n,n+1-s,n+1-f)
+        if (f + s > n + 1) {
+            tie(F[n][f][s], G[n][f][s]) = dp(n, n + 1 - s, n + 1 - f);
+            return {F[n][f][s], G[n][f][s]};
         }
-        vector<int> nextarr(size + (arr.size() % 2));
-        int m = (1 << size) - 1;
-        for(int i = 0; i <= m; i++) { //try all the winning status for the left side players.
-            int left = 0, right = nextarr.size() - 1;
-            for(int j = 0; j < size; j++) {
-                if((1 << j) & i) { //left side player win, put it to the next array.
-                    nextarr[left++] = arr[j];
-                }else { //right side player win.
-                    nextarr[right--] = arr[arr.size() - j - 1];
+
+        int earliest = INT_MAX, latest = INT_MIN;
+        int n_half = (n + 1) / 2;
+
+        if (s <= n_half) {
+            // On the left or in the middle
+            for (int i = 0; i < f; ++i) {
+                for (int j = 0; j < s - f; ++j) {
+                    auto [x, y] = dp(n_half, i + 1, i + j + 2);
+                    earliest = min(earliest, x);
+                    latest = max(latest, y);
                 }
-                
             }
-            if(arr.size() % 2) { //middle player go to the next round.
-                nextarr[left] = arr[arr.size() / 2];
+        } else {
+            // s on the right
+            // s'
+            int s_prime = n + 1 - s;
+            int mid = (n - 2 * s_prime + 1) / 2;
+            for (int i = 0; i < f; ++i) {
+                for (int j = 0; j < s_prime - f; ++j) {
+                    auto [x, y] = dp(n_half, i + 1, i + j + mid + 2);
+                    earliest = min(earliest, x);
+                    latest = max(latest, y);
+                }
             }
-            dfs(nextarr, round + 1);
         }
+
+        return {F[n][f][s] = earliest + 1, G[n][f][s] = latest + 1};
     }
+
     vector<int> earliestAndLatest(int n, int firstPlayer, int secondPlayer) {
-        vector<int> arr(n);
-        for(int i= 1; i <= n; i++) {
-            arr[i - 1] = i;
+        memset(F, 0, sizeof(F));
+        memset(G, 0, sizeof(G));
+
+        // F(n,f,s) = F(n,s,f)
+        if (firstPlayer > secondPlayer) {
+            swap(firstPlayer, secondPlayer);
         }
-        first = firstPlayer;
-        second = secondPlayer;
-        dfs(arr, 1);
-        return {mn, mx};
+
+        auto [earliest, latest] = dp(n, firstPlayer, secondPlayer);
+        return {earliest, latest};
     }
 };
