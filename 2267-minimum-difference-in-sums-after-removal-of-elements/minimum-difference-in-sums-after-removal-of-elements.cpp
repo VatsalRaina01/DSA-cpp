@@ -1,7 +1,4 @@
-// OJ: https://leetcode.com/contest/biweekly-contest-71/problems/minimum-difference-in-sums-after-removal-of-elements/
-// Author: github.com/lzl124631x
-// Time: O(NlogN)
-// Space: O(N)
+
 class Solution {
 public:
     long long minimumDifference(vector<int>& A) {
