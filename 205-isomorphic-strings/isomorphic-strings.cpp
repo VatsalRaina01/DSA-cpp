@@ -1,14 +1,11 @@
 class Solution {
 public:
     bool isIsomorphic(string s, string t) {
-        unordered_map<char , char> m1,m2;
         if(s.length()!=t.length()) return false;
-        for(int i=0;i<s.length();i++){
-            if( m1[s[i]] && m1[s[i]]!=t[i]) return false;
-            if( m2[t[i]] && m2[t[i]]!=s[i]) return false;
-            m1[s[i]]=t[i];
-            m2[t[i]]=s[i];
-
+        int mp_f[128] = {0}, mp_r[128] = {0}, n = s.size();
+        for (int i = 0; i < s.size(); ++i) {
+            if (mp_f[s[i]] != mp_r[t[i]]) { return false; }
+            mp_f[s[i]] = mp_r[t[i]] = i + 1;
         }
         return true;
         
