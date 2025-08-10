@@ -1,17 +1,21 @@
 class Solution {
 public:
     bool reorderedPowerOf2(int n) {
-        string s=to_string(n);
-        sort(s.begin(),s.end());
+        string s = sortDigits(n);
 
-        for(int i=0;i<=29;i++){
-            string p=to_string(1<<i);
-            sort(p.begin(),p.end());
-            
-            if(s==p)
+        for(int i = 0; i<31; i++){
+            int power = 1 << i;
+            if(s == sortDigits(power)){
                 return true;
             }
+        }
         return false;
+    }
 
+
+        string sortDigits(int num) {
+        string s = to_string(num);
+        sort(s.begin(), s.end());
+        return s;
     }
 };
