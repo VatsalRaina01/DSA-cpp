@@ -1,6 +1,6 @@
 class Solution {
 public:
-    int M = 1e9+7;
+    int M = 1000000007;
 
     vector<int> productQueries(int n, vector<vector<int>>& queries) {
         vector<int> powers;
