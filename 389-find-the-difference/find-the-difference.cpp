@@ -2,9 +2,10 @@ class Solution {
 public:
     char findTheDifference(string s, string t) {
        int res=0;
-       for(char c:s) res^=c;
-       for(char r:t) res^=r;
-            return res;
-            
+       for(char c:t) res+=c;
+       for(char c:s) res-=c;
+
+       return res;
+
     }
 };
