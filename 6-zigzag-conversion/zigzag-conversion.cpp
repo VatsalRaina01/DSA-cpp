@@ -1,30 +1,26 @@
 class Solution {
 public:
     string convert(string s, int numRows) {
-        if (numRows == 1 || numRows >= s.length()) {
+        if (numRows == 1 || numRows >= s.size())
             return s;
-        }
 
-        int idx = 0, d = 1;
-        vector<vector<char>> rows(numRows);
+        vector<string> rows(numRows);
+        int currRow = 0;
+        bool goingDown = false;
 
         for (char c : s) {
-            rows[idx].push_back(c);
-            if (idx == 0) {
-                d = 1;
-            } else if (idx == numRows - 1) {
-                d = -1;
-            }
-            idx += d;
+            rows[currRow] += c;
+
+            if (currRow == 0 || currRow == numRows - 1)
+                goingDown = !goingDown;
+
+            currRow += goingDown ? 1 : -1;
         }
 
-        string result;
-        for (const auto& row : rows) {
-            for (char c : row) {
-                result += c;
-            }
-        }
+        string ans;
+        for (string row : rows)
+            ans += row;
 
-        return result;        
+        return ans;
     }
 };
